@@ -1,0 +1,15 @@
+language: java
+jdk:
+- oraclejdk8
+branches:
+  only:
+  - master
+  - develop
+notifications:
+  email:
+    recipients:
+    - alberto95.rm@gmail.com
+script:
+- mvn verify
+- mvn org.jacoco:jacoco-maven-plugin:prepare-agent verify
+- mvn sonar:sonar -Dsonar.projectKey=albertogarciag95_APAW-ECP2-AlbertoGarciaGarabal -Dsonar.organization=albertogarciag95-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR
