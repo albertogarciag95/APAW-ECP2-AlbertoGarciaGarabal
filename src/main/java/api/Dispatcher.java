@@ -19,7 +19,7 @@ public class Dispatcher {
                 case POST:
                     this.postAction(request, response);
                     break;
-                default: // Unexpected
+                default:
                     throw new RequestInvalidException("Unexpected method error: " + request.getMethod());
             }
         } catch (ArgumentNotValidException | RequestInvalidException exception) {
@@ -28,7 +28,7 @@ public class Dispatcher {
         } catch (NotFoundException exception) {
             response.setBody(exception.getMessage());
             response.setStatus(HttpStatus.NOT_FOUND);
-        } catch (Exception exception) {  // Unexpected
+        } catch (Exception exception) {
             exception.printStackTrace();
             response.setBody(exception);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);

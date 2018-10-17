@@ -19,6 +19,7 @@ public class InstrumentoIT {
         instrumento.setNombre("Trompeta");
         instrumento.setMaterial("Metal");
         instrumento.setFamilia(FamiliaInstrumento.VIENTO_METAL);
+
         HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS)
                 .body(new InstrumentoDTO(instrumento)).post();
         HttpResponse response = new Client().submit(request);
