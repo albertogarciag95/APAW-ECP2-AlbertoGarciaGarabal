@@ -7,7 +7,7 @@ public class Server {
 
     public HttpResponse submit(HttpRequest request) {
         HttpResponse response = new HttpResponse();
-        dispatcher.submit(request, response);
+        //dispatcher.submit(request, response);
         return response;
     }
 
