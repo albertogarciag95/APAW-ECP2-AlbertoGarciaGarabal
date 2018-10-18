@@ -15,14 +15,14 @@ public class MusicoBusinessController {
     public InstrumentoDAO instrumentoDAO = new InstrumentoDAO();
 
     public String create(MusicoDTO musicoDTO) {
-
+        Instrumento instrumento = null;
         if(musicoDTO.getInstrumento() != null) {
-            Instrumento instrumento = instrumentoDAO.read(musicoDTO.getInstrumento().getId())
-                    .orElseThrow(() -> new NotFoundException("Musico with id " + musicoDTO.getId() + " is not found"));
+            instrumento = instrumentoDAO.read(musicoDTO.getInstrumento().getId())
+                    .orElseThrow(() -> new NotFoundException("Instrumento " + musicoDTO.getInstrumento().getId() + " is not found"));
         }
 
         Musico musico = new Musico(musicoDTO.getId()).builder().nombre(musicoDTO.getNombre())
-                .edad(musicoDTO.getEdad()).profesional(musicoDTO.isProfesional()).instrumento(musicoDTO.getInstrumento()).build();
+                .edad(musicoDTO.getEdad()).profesional(musicoDTO.isProfesional()).instrumento(instrumento).build();
 
         musicoDAO.save(musico);
 

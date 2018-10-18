@@ -30,16 +30,8 @@ public class MusicoDTO {
         return edad;
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-
     public boolean isProfesional() {
         return profesional;
-    }
-
-    public void setProfesional(boolean profesional) {
-        this.profesional = profesional;
     }
 
     public Instrumento getInstrumento() {

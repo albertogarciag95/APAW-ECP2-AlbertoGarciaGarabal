@@ -2,54 +2,61 @@ package api;
 
 import api.dto.InstrumentoDTO;
 import api.dto.MusicoDTO;
-import api.entities.FamiliaInstrumento;
 import api.entities.Instrumento;
 import api.entities.Musico;
 import api.restControllers.InstrumentoRestController;
 import api.restControllers.MusicoRestController;
-import http.Client;
-import http.HttpRequest;
-import http.HttpResponse;
-import http.HttpStatus;
+import http.*;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MusicoIT {
 
-    private List<Musico> musicos = new ArrayList<>();
+    private Musico musicoDummie;
 
-    @Before
+    @BeforeEach
     public void before() {
-        musicos.add(new Musico("1").builder().nombre("Alberto Garcia Garabal").edad(23)
-                .profesional(false).instrumento(new Instrumento("1")).build());
-        musicos.add(new Musico("2").builder().nombre("Louis Armstrong").edad(70)
-                .profesional(true).instrumento(new Instrumento("2")).build());
-        musicos.add(new Musico("3").builder().nombre("Dennis Brain").edad(36)
-                .profesional(true).instrumento(new Instrumento("3")).build());
+        musicoDummie = new Musico("1").builder().nombre("Alberto Garcia Garabal").edad(23)
+                .profesional(false).instrumento(new Instrumento("1")).build();
     }
 
     @Test
-    public void test01CreateInstrumento() {
-        for(int i = 0; i < musicos.size(); i ++ ) {
-            Musico musico = new Musico(musicos.get(i).getId());
-            musico.setNombre(musicos.get(i).getNombre());
-            musico.setProfesional(musicos.get(i).isProfesional());
-            musico.setEdad(musicos.get(i).getEdad());
+    public void test01CreateMusico() {
+        musicoDummie.setInstrumento(new Instrumento(this.createInstrumento("1")));
+        HttpRequest request = HttpRequest.builder(MusicoRestController.MUSICOS)
+                .body(new MusicoDTO(musicoDummie)).post();
+        HttpResponse response = new Client().submit(request);
 
-            HttpRequest request = HttpRequest.builder(MusicoRestController.MUSICOS)
-                    .body(new MusicoDTO(musico)).post();
-            HttpResponse response = new Client().submit(request);
+        assertEquals(response.getStatus(), HttpStatus.OK);
+        assertEquals(musicoDummie.getId(), response.getBody().toString());
+    }
 
-            assertEquals(response.getStatus(), HttpStatus.OK);
-            assertEquals(musico.getId(), response.getBody().toString());
-        }
+    private String createInstrumento(String id) {
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS)
+                .body(new InstrumentoDTO(new Instrumento(id))).post();
+        return (String) new Client().submit(request).getBody();
+    }
+
+    @Test
+    public void test02CreateMusicoIdNull() {
+        HttpRequest request = HttpRequest.builder(MusicoRestController.MUSICOS)
+                .body(new MusicoDTO(new Musico(null))).post();
+
+        HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    public void test03CreateMusicoSinInstrumento() {
+        musicoDummie.setInstrumento(null);
+        HttpRequest request = HttpRequest.builder(MusicoRestController.MUSICOS)
+                .body(new MusicoDTO(musicoDummie)).post();
+
+        HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
     }
 }
