@@ -7,7 +7,6 @@ import api.entities.Musico;
 import api.restControllers.InstrumentoRestController;
 import api.restControllers.MusicoRestController;
 import http.*;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

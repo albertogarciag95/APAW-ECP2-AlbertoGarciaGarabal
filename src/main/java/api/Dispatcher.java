@@ -48,8 +48,7 @@ public class Dispatcher {
     public void putAction(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
             response.setBody(this.instrumentoRestController.update(request.getPath(1), (InstrumentoDTO) request.getBody()));
-        }
-        else {
+        } else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
     }
@@ -57,11 +56,9 @@ public class Dispatcher {
     public void postAction(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS)) {
             response.setBody(this.instrumentoRestController.create((InstrumentoDTO) request.getBody()));
-        }
-        else if(request.isEqualsPath(MusicoRestController.MUSICOS)) {
+        } else if(request.isEqualsPath(MusicoRestController.MUSICOS)) {
             response.setBody(this.musicoRestController.create((MusicoDTO) request.getBody()));
-        }
-        else {
+        } else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
     }
@@ -69,8 +66,7 @@ public class Dispatcher {
     public void getAction(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
             response.setBody(this.instrumentoRestController.findById(request.getParams().get("id")));
-        }
-        else {
+        } else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
     }
