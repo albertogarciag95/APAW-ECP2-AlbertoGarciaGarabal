@@ -5,6 +5,8 @@ import api.entities.FamiliaInstrumento;
 import api.entities.Instrumento;
 import api.restControllers.InstrumentoRestController;
 import http.*;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +20,7 @@ public class InstrumentoIT {
 
     private List<Instrumento> instrumentos = new ArrayList<>();
 
-    @BeforeEach
+    @Before
     public void before() {
         instrumentos.add(new Instrumento("1").builder().nombre("Trompeta").material("Laton")
                 .familia(FamiliaInstrumento.VIENTO_METAL).build());

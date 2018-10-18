@@ -19,7 +19,7 @@ public class InstrumentoBusinessController {
     }
 
     public Instrumento findById(String id) {
-        return instrumentoDAO.read(id).orElseThrow(() -> new NotFoundException("Musico with id " + id + " is not found"));
+        return instrumentoDAO.read(id).orElseThrow(() -> new NotFoundException("Instrumendo with id " + id + " is not found"));
     }
 }
 
