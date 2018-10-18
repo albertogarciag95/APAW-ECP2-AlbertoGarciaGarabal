@@ -19,6 +19,9 @@ public class Dispatcher {
                 case POST:
                     this.postAction(request, response);
                     break;
+                case GET:
+                    this.getAction(request, response);
+                    break;
                 default:
                     throw new RequestInvalidException("Unexpected method error: " + request.getMethod());
             }
@@ -38,6 +41,15 @@ public class Dispatcher {
     public void postAction(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS)) {
             response.setBody(this.instrumentoRestController.create((InstrumentoDTO) request.getBody()));
+        }
+        else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
+        }
+    }
+
+    public void getAction(HttpRequest request, HttpResponse response) {
+        if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
+            response.setBody(this.instrumentoRestController.findById(request.getParams().get("id")));
         }
         else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());

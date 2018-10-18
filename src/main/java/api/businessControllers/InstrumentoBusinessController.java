@@ -3,6 +3,7 @@ package api.businessControllers;
 import api.dao.InstrumentoDAO;
 import api.dto.InstrumentoDTO;
 import api.entities.Instrumento;
+import api.exceptions.NotFoundException;
 
 public class InstrumentoBusinessController {
 
@@ -17,5 +18,8 @@ public class InstrumentoBusinessController {
         return instrumento.getId();
     }
 
+    public Instrumento findById(String id) {
+        return instrumentoDAO.read(id).orElseThrow(() -> new NotFoundException("Musico with id " + id + " is not found"));
+    }
 }
 
