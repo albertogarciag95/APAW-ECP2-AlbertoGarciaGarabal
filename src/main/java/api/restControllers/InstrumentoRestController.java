@@ -8,6 +8,8 @@ import api.exceptions.ArgumentNotValidException;
 public class InstrumentoRestController {
     public static final String INSTRUMENTOS = "/instrumentos";
 
+    public static final String SEARCH = "/search";
+
     public static final String INSTRUMENTO_ID = "/{id}";
 
     private InstrumentoBusinessController instrumentoBusinessController = new InstrumentoBusinessController();
@@ -29,5 +31,9 @@ public class InstrumentoRestController {
         }
     }
 
-
+    public String update(String id, InstrumentoDTO instrumentoDTO) {
+        this.validateIsNotNull(instrumentoDTO, "userDto");
+        this.validateIsNotNull(instrumentoDTO.getId(), "UserDto Nick");
+        return this.instrumentoBusinessController.update(id, instrumentoDTO);
+    }
 }

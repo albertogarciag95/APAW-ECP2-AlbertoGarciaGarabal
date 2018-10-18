@@ -26,6 +26,9 @@ public class Dispatcher {
                 case GET:
                     this.getAction(request, response);
                     break;
+                case PUT:
+                    this.putAction(request, response);
+                    break;
                 default:
                     throw new RequestInvalidException("Unexpected method error: " + request.getMethod());
             }
@@ -39,6 +42,15 @@ public class Dispatcher {
             exception.printStackTrace();
             response.setBody(exception);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public void putAction(HttpRequest request, HttpResponse response) {
+        if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
+            response.setBody(this.instrumentoRestController.update(request.getPath(1), (InstrumentoDTO) request.getBody()));
+        }
+        else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
     }
 

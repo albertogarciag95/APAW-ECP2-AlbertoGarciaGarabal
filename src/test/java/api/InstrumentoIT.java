@@ -20,13 +20,13 @@ public class InstrumentoIT {
 
     private List<Instrumento> instrumentos = new ArrayList<>();
 
-    @Before
+    @BeforeEach
     public void before() {
         instrumentos.add(new Instrumento("1").builder().nombre("Trompeta").material("Laton")
                 .familia(FamiliaInstrumento.VIENTO_METAL).build());
         instrumentos.add(new Instrumento("2").builder().nombre("Clarinete").material("Madera")
                 .familia(FamiliaInstrumento.VIENTO_MADERA).build());
-        instrumentos.add(new Instrumento("3").builder().nombre("Timbales").material("Plastico")
+        instrumentos.add(new Instrumento("3").builder().nombre("Timbales").material("Madera")
                 .familia(FamiliaInstrumento.PERCUSION).build());
     }
 
@@ -66,7 +66,6 @@ public class InstrumentoIT {
 
             assertEquals(response.getStatus(), HttpStatus.OK);
             assertEquals(instrumentos.get(i).getId(), created.getId());
-            assertEquals(instrumentos.get(i).getNombre(), created.getNombre());
         }
     }
 
@@ -76,6 +75,16 @@ public class InstrumentoIT {
                 .param("id", "4").get();
         HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
         assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus());
+
+    }
+
+    @Test
+    public void test05PutInstrumento() {
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
+                .expandPath(instrumentos.get(1).getId()).body(new InstrumentoDTO(new Instrumento("2"))).put();
+        HttpResponse response = new Client().submit(request);
+        assertEquals(response.getStatus(), HttpStatus.OK);
+        assertEquals(response.getBody(), "2");
 
     }
 }

@@ -16,12 +16,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MusicoIT {
 
-    private Musico musicoDummie;
+    private Musico musicoDummie, musicoDummie2, musicoDummie3;
 
     @BeforeEach
     public void before() {
         musicoDummie = new Musico("1").builder().nombre("Alberto Garcia Garabal").edad(23)
                 .profesional(false).instrumento(new Instrumento("1")).build();
+        musicoDummie2 = new Musico("1").builder().nombre("Pepe Lopez").edad(16)
+                .profesional(false).instrumento(new Instrumento("2")).build();
+        musicoDummie3 = new Musico("1").builder().nombre("Fran Marquez").edad(27)
+                .profesional(false).instrumento(new Instrumento("5")).build();
     }
 
     @Test
