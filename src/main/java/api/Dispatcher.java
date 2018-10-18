@@ -42,7 +42,6 @@ public class Dispatcher {
         if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS)) {
             response.setBody(this.instrumentoRestController.create((InstrumentoDTO) request.getBody()));
         }
-
         else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
@@ -50,7 +49,7 @@ public class Dispatcher {
 
     public void getAction(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
-            response.setBody(this.instrumentoRestController.findById(request.getBody().toString()));
+            response.setBody(this.instrumentoRestController.findById(request.getParams().get("id")));
         }
         else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());

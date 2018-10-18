@@ -4,18 +4,15 @@ import api.dto.InstrumentoDTO;
 import api.entities.FamiliaInstrumento;
 import api.entities.Instrumento;
 import api.restControllers.InstrumentoRestController;
-import http.Client;
-import http.HttpRequest;
-import http.HttpResponse;
-import org.junit.Before;
+import http.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InstrumentoIT {
 
@@ -32,7 +29,7 @@ public class InstrumentoIT {
     }
 
     @Test
-    public void testCreateInstrumento() {
+    public void test01CreateInstrumento() {
         for(int i = 0; i < instrumentos.size(); i ++ ) {
             Instrumento instrumento = new Instrumento(instrumentos.get(i).getId());
             instrumento.setNombre(instrumentos.get(i).getNombre());
@@ -43,22 +40,40 @@ public class InstrumentoIT {
                     .body(new InstrumentoDTO(instrumento)).post();
             HttpResponse response = new Client().submit(request);
 
+            assertEquals(response.getStatus(), HttpStatus.OK);
             assertEquals(instrumento.getId(), response.getBody().toString());
         }
     }
 
     @Test
-    public void testGetInstrumentosById() {
+    public void test02CreateInstrumentoIdNull() {
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS)
+                .body(new InstrumentoDTO(new Instrumento(null))).post();
+
+        HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    public void test03GetInstrumentoById() {
         for(int i = 0; i < instrumentos.size(); i ++ ) {
-
-            HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)
-                    .body(instrumentos.get(i).getId()).get();
+            HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
+                    .param("id", instrumentos.get(i).getId()).get();
             HttpResponse response = new Client().submit(request);
-
             Instrumento created = (Instrumento) response.getBody();
 
+            assertEquals(response.getStatus(), HttpStatus.OK);
             assertEquals(instrumentos.get(i).getId(), created.getId());
             assertEquals(instrumentos.get(i).getNombre(), created.getNombre());
         }
+    }
+
+    @Test
+    public void test04GetInstrumentoNotFound() {
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
+                .param("id", "4").get();
+        HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus());
+
     }
 }
