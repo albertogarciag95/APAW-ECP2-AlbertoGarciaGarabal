@@ -21,5 +21,15 @@ public class InstrumentoBusinessController {
     public Instrumento findById(String id) {
         return instrumentoDAO.read(id).orElseThrow(() -> new NotFoundException("Instrumendo with id " + id + " is not found"));
     }
+
+    public String update(String id, InstrumentoDTO instrumentoDTO) {
+        Instrumento instrumento = instrumentoDAO.read(id).orElseThrow(() -> new NotFoundException("User id: " + id));
+        instrumento.setFamilia(instrumentoDTO.getFamilia());
+        instrumento.setMaterial(instrumentoDTO.getMaterial());
+        instrumento.setNombre(instrumentoDTO.getNombre());
+        instrumentoDAO.save(instrumento);
+
+        return instrumento.getId();
+    }
 }
 
