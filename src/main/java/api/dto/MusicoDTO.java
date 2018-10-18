@@ -1,18 +1,14 @@
-package api.entities;
+package api.dto;
 
-import api.entities.builders.MusicoBuilder;
+import api.entities.Instrumento;
+import api.entities.Musico;
 
-public class Musico  {
+public class MusicoDTO {
     private String id;
     private String nombre;
     private int edad;
     private boolean profesional;
     private Instrumento instrumento;
-
-    public Musico(String id) {
-        this.id = id;
-    }
-
 
     public String getId() {
         return id;
@@ -54,8 +50,11 @@ public class Musico  {
         this.instrumento = instrumento;
     }
 
-    public MusicoBuilder builder() {
-        return new MusicoBuilder(this);
+    public MusicoDTO(Musico musico) {
+        this.id = musico.getId();
+        this.nombre = musico.getNombre();
+        this.edad = musico.getEdad();
+        this.profesional = musico.isProfesional();
+        this.instrumento = musico.getInstrumento();
     }
-
 }
