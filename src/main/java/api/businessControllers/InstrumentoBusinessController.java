@@ -5,6 +5,9 @@ import api.dto.InstrumentoDTO;
 import api.entities.Instrumento;
 import api.exceptions.NotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class InstrumentoBusinessController {
 
     public InstrumentoDAO instrumentoDAO = new InstrumentoDAO();
@@ -30,6 +33,12 @@ public class InstrumentoBusinessController {
         instrumentoDAO.save(instrumento);
 
         return instrumento.getId();
+    }
+
+    public List<InstrumentoDTO> findAll() {
+        return instrumentoDAO.findAll()
+                .stream().map(InstrumentoDTO::new)
+                .collect(Collectors.toList());
     }
 }
 

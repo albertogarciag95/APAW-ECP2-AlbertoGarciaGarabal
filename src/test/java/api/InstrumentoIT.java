@@ -29,7 +29,7 @@ public class InstrumentoIT {
     }
 
     @Test
-    public void test01CreateInstrumento() {
+    public void test01CreateInstrumentos() {
         for(int i = 0; i < instrumentosDummie.size(); i ++ ) {
             Instrumento instrumento = new Instrumento(instrumentosDummie.get(i).getId());
             instrumento.setNombre(instrumentosDummie.get(i).getNombre());
@@ -83,5 +83,12 @@ public class InstrumentoIT {
         HttpResponse response = new Client().submit(request);
         assertEquals(response.getStatus(), HttpStatus.OK);
         assertEquals(response.getBody(), "2");
+    }
+
+    @Test
+    public void test06FindAll() {
+        this.test01CreateInstrumentos();
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).get();
+        new Client().submit(request).getBody();
     }
 }

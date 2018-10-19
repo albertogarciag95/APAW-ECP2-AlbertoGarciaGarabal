@@ -3,7 +3,6 @@ package api;
 import api.dto.BandaDTO;
 import api.dto.InstrumentoDTO;
 import api.dto.MusicoDTO;
-import api.entities.Musico;
 import api.exceptions.ArgumentNotValidException;
 import api.exceptions.NotFoundException;
 import api.exceptions.RequestInvalidException;
@@ -53,6 +52,7 @@ public class Dispatcher {
         }
     }
 
+
     public void patchAction(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(MusicoRestController.MUSICOS + MusicoRestController.MUSICO_ID
                 + MusicoRestController.PROFESIONAL)) {
@@ -83,7 +83,9 @@ public class Dispatcher {
     }
 
     public void getAction(HttpRequest request, HttpResponse response) {
-        if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
+        if(request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS)) {
+            response.setBody(this.instrumentoRestController.findAll());
+        } else if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
             response.setBody(this.instrumentoRestController.findById(request.getParams().get("id")));
         } else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
