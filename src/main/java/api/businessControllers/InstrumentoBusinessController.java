@@ -40,5 +40,9 @@ public class InstrumentoBusinessController {
                 .stream().map(InstrumentoDTO::new)
                 .collect(Collectors.toList());
     }
+
+    public void delete(String id) {
+        instrumentoDAO.deleteById(id);
+    }
 }
 

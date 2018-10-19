@@ -29,4 +29,8 @@ public class InstrumentoDAO {
         LogManager.getLogger(this.getClass()).debug("   findAll: " + list);
         return list;
     }
+
+    public void deleteById(String id) {
+        LogManager.getLogger(this.getClass()).debug("   deleteById(" + id + "): " + map.remove(id));
+    }
 }
