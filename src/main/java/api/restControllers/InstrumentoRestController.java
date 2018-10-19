@@ -40,4 +40,9 @@ public class InstrumentoRestController {
             throw new ArgumentNotValidException(component + " is missing");
         }
     }
+
+    public void delete(String id) {
+        this.validateIsNotNull(id, "Id of instrumento");
+        this.instrumentoBusinessController.delete(id);
+    }
 }

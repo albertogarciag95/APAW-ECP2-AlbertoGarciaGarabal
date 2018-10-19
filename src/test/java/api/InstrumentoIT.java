@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InstrumentoIT {
 
@@ -86,9 +87,19 @@ public class InstrumentoIT {
     }
 
     @Test
-    public void test06FindAll() {
+    public void test06DeleteById() {
         this.test01CreateInstrumentos();
-        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).get();
-        new Client().submit(request).getBody();
+        int count = this.findAll().size();
+        HttpRequest request2 = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
+                .expandPath(instrumentosDummie.get(0).getId()).delete();
+        new Client().submit(request2);
+        int count2 = this.findAll().size();
+        assertTrue(count2 < count);
     }
+
+    private List<InstrumentoDTO> findAll() {
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).get();
+        return (List<InstrumentoDTO>) new Client().submit(request).getBody();
+    }
+
 }

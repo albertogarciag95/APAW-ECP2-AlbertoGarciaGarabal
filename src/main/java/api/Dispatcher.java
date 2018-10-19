@@ -36,6 +36,9 @@ public class Dispatcher {
                 case PATCH:
                     this.patchAction(request, response);
                     break;
+                case DELETE:
+                    this.deleteAction(request, response);
+                    break;
                 default:
                     throw new RequestInvalidException("Unexpected method error: " + request.getMethod());
             }
@@ -52,6 +55,14 @@ public class Dispatcher {
         }
     }
 
+    public void deleteAction(HttpRequest request, HttpResponse response) {
+        if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.
+                INSTRUMENTO_ID)) {
+            this.instrumentoRestController.delete(request.getPath(1));
+        } else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
+        }
+    }
 
     public void patchAction(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(MusicoRestController.MUSICOS + MusicoRestController.MUSICO_ID
