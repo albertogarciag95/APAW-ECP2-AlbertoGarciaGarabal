@@ -9,4 +9,4 @@
 ### GET /instrumentos
 ### DELETE /instrumentos/{id}
 
-He liberado la primera release, pero para la última release no he sido capaz de resolver los conflictos del pom en IntelliJ.
+Finalmente adjunto la release 1.1.0 generando el .jar a partir de la rama 'release-1.1.0'
