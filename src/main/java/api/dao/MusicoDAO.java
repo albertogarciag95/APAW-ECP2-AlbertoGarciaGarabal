@@ -12,8 +12,6 @@ public class MusicoDAO {
 
     private static Map<String, Musico> map = new HashMap<>();
 
-    private InstrumentoDAO instrumentoDAO = new InstrumentoDAO();
-
     public void save(Musico musico) {
         String id = musico.getId();
         if (id == null) {
