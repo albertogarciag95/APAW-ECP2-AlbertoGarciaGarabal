@@ -57,15 +57,13 @@ public class InstrumentoIT {
 
     @Test
     public void test03GetInstrumentoById() {
-        for(int i = 0; i < instrumentosDummie.size(); i ++ ) {
-            HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
-                    .param("id", instrumentosDummie.get(i).getId()).get();
-            HttpResponse response = new Client().submit(request);
-            Instrumento created = (Instrumento) response.getBody();
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
+                .param("id", instrumentosDummie.get(1).getId()).get();
+        HttpResponse response = new Client().submit(request);
+        Instrumento created = (Instrumento) response.getBody();
 
-            assertEquals(response.getStatus(), HttpStatus.OK);
-            assertEquals(instrumentosDummie.get(i).getId(), created.getId());
-        }
+        assertEquals(response.getStatus(), HttpStatus.OK);
+        assertEquals(instrumentosDummie.get(1).getId(), created.getId());
     }
 
     @Test
