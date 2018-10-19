@@ -28,4 +28,11 @@ public class MusicoBusinessController {
 
         return musico.getId();
     }
+
+    public void updateIsProfesional(String musicoId, boolean profesional) {
+        Musico musico = musicoDAO.read(musicoId)
+                .orElseThrow(() -> new NotFoundException("Musico (" + musicoId + ")"));
+        musico.setProfesional(profesional);
+        musicoDAO.save(musico);
+    }
 }

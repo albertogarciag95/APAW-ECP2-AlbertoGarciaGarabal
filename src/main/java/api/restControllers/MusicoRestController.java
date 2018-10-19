@@ -9,6 +9,10 @@ public class MusicoRestController {
 
     public static final String MUSICOS = "/musicos";
 
+    public static final String MUSICO_ID = "/{id}";
+
+    public static final String PROFESIONAL = "/profesional";
+
     private MusicoBusinessController musicoBusinessController = new MusicoBusinessController();
 
     public String create(MusicoDTO musicoDTO) {
@@ -16,6 +20,11 @@ public class MusicoRestController {
         this.validateIsNotNull(musicoDTO.getId(), "musicoDTO");
         this.validateInstrumento(musicoDTO.getInstrumento());
         return this.musicoBusinessController.create(musicoDTO);
+    }
+
+    public void updateEdad(String musicoId, boolean profesional) {
+        this.validateIsNotNull(profesional, "profesional");
+        this.musicoBusinessController.updateIsProfesional(musicoId, profesional);
     }
 
     private void validateIsNotNull(Object property, String component) {
@@ -29,5 +38,4 @@ public class MusicoRestController {
             throw new ArgumentNotValidException("Instrumento del musico is missing");
         }
     }
-
 }

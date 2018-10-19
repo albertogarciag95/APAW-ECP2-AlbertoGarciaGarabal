@@ -3,6 +3,7 @@ package api;
 import api.dto.BandaDTO;
 import api.dto.InstrumentoDTO;
 import api.dto.MusicoDTO;
+import api.entities.Musico;
 import api.exceptions.ArgumentNotValidException;
 import api.exceptions.NotFoundException;
 import api.exceptions.RequestInvalidException;
@@ -33,6 +34,9 @@ public class Dispatcher {
                 case PUT:
                     this.putAction(request, response);
                     break;
+                case PATCH:
+                    this.patchAction(request, response);
+                    break;
                 default:
                     throw new RequestInvalidException("Unexpected method error: " + request.getMethod());
             }
@@ -46,6 +50,15 @@ public class Dispatcher {
             exception.printStackTrace();
             response.setBody(exception);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public void patchAction(HttpRequest request, HttpResponse response) {
+        if (request.isEqualsPath(MusicoRestController.MUSICOS + MusicoRestController.MUSICO_ID
+                + MusicoRestController.PROFESIONAL)) {
+            this.musicoRestController.updateEdad(request.getPath(1), (boolean) request.getBody());
+        } else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
     }
 
