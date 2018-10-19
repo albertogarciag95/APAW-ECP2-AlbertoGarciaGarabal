@@ -8,11 +8,11 @@ import java.util.Map;
 
 public class BandaDAO {
 
-    private Map<String, Banda> map = new HashMap<>();
+    private static Map<String, Banda> map = new HashMap<>();
 
     public void save(Banda banda) {
         String id = banda.getId();
-        this.map.put(id, banda);
+        map.put(id, banda);
         LogManager.getLogger(this.getClass()).debug("   save: " + banda);
     }
 

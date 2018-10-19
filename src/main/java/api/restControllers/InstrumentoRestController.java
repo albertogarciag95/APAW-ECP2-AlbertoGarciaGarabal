@@ -5,6 +5,8 @@ import api.dto.InstrumentoDTO;
 import api.entities.Instrumento;
 import api.exceptions.ArgumentNotValidException;
 
+import java.util.List;
+
 public class InstrumentoRestController {
     public static final String INSTRUMENTOS = "/instrumentos";
 
@@ -23,15 +25,19 @@ public class InstrumentoRestController {
         return this.instrumentoBusinessController.findById(id);
     }
 
-    private void validateIsNotNull(Object property, String component) {
-        if (property == null) {
-            throw new ArgumentNotValidException(component + " is missing");
-        }
-    }
-
     public String update(String id, InstrumentoDTO instrumentoDTO) {
         this.validateIsNotNull(instrumentoDTO, "userDto");
         this.validateIsNotNull(instrumentoDTO.getId(), "UserDto Nick");
         return this.instrumentoBusinessController.update(id, instrumentoDTO);
+    }
+
+    public List<InstrumentoDTO> findAll() {
+        return this.instrumentoBusinessController.findAll();
+    }
+
+    private void validateIsNotNull(Object property, String component) {
+        if (property == null) {
+            throw new ArgumentNotValidException(component + " is missing");
+        }
     }
 }
