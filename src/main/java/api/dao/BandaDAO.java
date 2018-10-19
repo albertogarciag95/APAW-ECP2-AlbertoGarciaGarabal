@@ -1,7 +1,6 @@
 package api.dao;
 
 import api.entities.Banda;
-import api.entities.Musico;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
