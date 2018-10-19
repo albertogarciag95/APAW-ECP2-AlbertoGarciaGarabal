@@ -15,20 +15,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MusicoIT {
 
-    private Musico musicoDummie, musicoDummie2, musicoDummie3;
+    private Musico musicoDummie;
 
     @BeforeEach
     public void before() {
         musicoDummie = new Musico("1").builder().nombre("Alberto Garcia Garabal").edad(23)
                 .profesional(false).instrumento(new Instrumento("1")).build();
-        musicoDummie2 = new Musico("1").builder().nombre("Pepe Lopez").edad(16)
-                .profesional(false).instrumento(new Instrumento("2")).build();
-        musicoDummie3 = new Musico("1").builder().nombre("Fran Marquez").edad(27)
-                .profesional(false).instrumento(new Instrumento("5")).build();
     }
 
     @Test
-    public void test01CreateMusico() {
+    public void createMusico() {
         musicoDummie.setInstrumento(new Instrumento(this.createInstrumento("1")));
         HttpRequest request = HttpRequest.builder(MusicoRestController.MUSICOS)
                 .body(new MusicoDTO(musicoDummie)).post();
@@ -45,7 +41,7 @@ public class MusicoIT {
     }
 
     @Test
-    public void test02CreateMusicoIdNull() {
+    public void createMusicoIdNull() {
         HttpRequest request = HttpRequest.builder(MusicoRestController.MUSICOS)
                 .body(new MusicoDTO(new Musico(null))).post();
 
@@ -54,7 +50,7 @@ public class MusicoIT {
     }
 
     @Test
-    public void test03CreateMusicoSinInstrumento() {
+    public void createMusicoSinInstrumento() {
         musicoDummie.setInstrumento(null);
         HttpRequest request = HttpRequest.builder(MusicoRestController.MUSICOS)
                 .body(new MusicoDTO(musicoDummie)).post();
@@ -62,4 +58,14 @@ public class MusicoIT {
         HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
     }
+
+    @Test
+    public void updateIsProfesional() {
+        this.createMusico();
+        HttpRequest request = HttpRequest.builder(MusicoRestController.MUSICOS).path(MusicoRestController.MUSICO_ID)
+                .expandPath(musicoDummie.getId()).path(MusicoRestController.PROFESIONAL).body(true).patch();
+        HttpResponse response = new Client().submit(request);
+        assertEquals(response.getStatus(), HttpStatus.OK);
+    }
+
 }

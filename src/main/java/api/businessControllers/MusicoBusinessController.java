@@ -7,7 +7,6 @@ import api.entities.Instrumento;
 import api.entities.Musico;
 import api.exceptions.NotFoundException;
 
-
 public class MusicoBusinessController {
 
     public MusicoDAO musicoDAO = new MusicoDAO();
@@ -25,7 +24,13 @@ public class MusicoBusinessController {
                 .edad(musicoDTO.getEdad()).profesional(musicoDTO.isProfesional()).instrumento(instrumento).build();
 
         musicoDAO.save(musico);
-
         return musico.getId();
+    }
+
+    public void updateIsProfesional(String musicoId, boolean profesional) {
+        Musico musico = musicoDAO.read(musicoId)
+                .orElseThrow(() -> new NotFoundException("Musico (" + musicoId + ")"));
+        musico.setProfesional(profesional);
+        musicoDAO.save(musico);
     }
 }
