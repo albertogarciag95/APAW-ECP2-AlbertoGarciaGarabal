@@ -1,17 +1,25 @@
 package api;
 
+import api.dto.BandaDTO;
 import api.dto.InstrumentoDTO;
+import api.dto.MusicoDTO;
 import api.exceptions.ArgumentNotValidException;
 import api.exceptions.NotFoundException;
 import api.exceptions.RequestInvalidException;
+import api.restControllers.BandaRestController;
 import api.restControllers.InstrumentoRestController;
+import api.restControllers.MusicoRestController;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.HttpStatus;
 
 public class Dispatcher {
 
+    private BandaRestController bandaRestController = new BandaRestController();
+
     private InstrumentoRestController instrumentoRestController = new InstrumentoRestController();
+
+    private MusicoRestController musicoRestController = new MusicoRestController();
 
     public void submit(HttpRequest request, HttpResponse response) {
         try {
@@ -21,6 +29,15 @@ public class Dispatcher {
                     break;
                 case GET:
                     this.getAction(request, response);
+                    break;
+                case PUT:
+                    this.putAction(request, response);
+                    break;
+                case PATCH:
+                    this.patchAction(request, response);
+                    break;
+                case DELETE:
+                    this.deleteAction(request, response);
                     break;
                 default:
                     throw new RequestInvalidException("Unexpected method error: " + request.getMethod());
@@ -38,20 +55,50 @@ public class Dispatcher {
         }
     }
 
+    public void deleteAction(HttpRequest request, HttpResponse response) {
+        if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.
+                INSTRUMENTO_ID)) {
+            this.instrumentoRestController.delete(request.getPath(1));
+        } else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
+        }
+    }
+
+    public void patchAction(HttpRequest request, HttpResponse response) {
+        if (request.isEqualsPath(MusicoRestController.MUSICOS + MusicoRestController.MUSICO_ID
+                + MusicoRestController.PROFESIONAL)) {
+            this.musicoRestController.updateEdad(request.getPath(1), (boolean) request.getBody());
+        } else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
+        }
+    }
+
+    public void putAction(HttpRequest request, HttpResponse response) {
+        if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
+            response.setBody(this.instrumentoRestController.update(request.getPath(1), (InstrumentoDTO) request.getBody()));
+        } else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
+        }
+    }
+
     public void postAction(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS)) {
             response.setBody(this.instrumentoRestController.create((InstrumentoDTO) request.getBody()));
-        }
-        else {
+        } else if(request.isEqualsPath(MusicoRestController.MUSICOS)) {
+            response.setBody(this.musicoRestController.create((MusicoDTO) request.getBody()));
+        } else if(request.isEqualsPath(BandaRestController.BANDAS)) {
+            response.setBody(this.bandaRestController.create((BandaDTO) request.getBody()));
+        } else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
     }
 
     public void getAction(HttpRequest request, HttpResponse response) {
-        if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
+        if(request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS)) {
+            response.setBody(this.instrumentoRestController.findAll());
+        } else if (request.isEqualsPath(InstrumentoRestController.INSTRUMENTOS + InstrumentoRestController.INSTRUMENTO_ID)) {
             response.setBody(this.instrumentoRestController.findById(request.getParams().get("id")));
-        }
-        else {
+        } else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
     }

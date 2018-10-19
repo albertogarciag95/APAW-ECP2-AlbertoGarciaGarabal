@@ -13,28 +13,29 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InstrumentoIT {
 
-    private List<Instrumento> instrumentos = new ArrayList<>();
+    private List<Instrumento> instrumentosDummie = new ArrayList<>();
 
     @BeforeEach
     public void before() {
-        instrumentos.add(new Instrumento("1").builder().nombre("Trompeta").material("Laton")
+        instrumentosDummie.add(new Instrumento("1").builder().nombre("Trompeta").material("Laton")
                 .familia(FamiliaInstrumento.VIENTO_METAL).build());
-        instrumentos.add(new Instrumento("2").builder().nombre("Clarinete").material("Madera")
+        instrumentosDummie.add(new Instrumento("2").builder().nombre("Clarinete").material("Madera")
                 .familia(FamiliaInstrumento.VIENTO_MADERA).build());
-        instrumentos.add(new Instrumento("3").builder().nombre("Timbales").material("Plastico")
+        instrumentosDummie.add(new Instrumento("3").builder().nombre("Timbales").material("Madera")
                 .familia(FamiliaInstrumento.PERCUSION).build());
     }
 
     @Test
-    public void test01CreateInstrumento() {
-        for(int i = 0; i < instrumentos.size(); i ++ ) {
-            Instrumento instrumento = new Instrumento(instrumentos.get(i).getId());
-            instrumento.setNombre(instrumentos.get(i).getNombre());
-            instrumento.setMaterial(instrumentos.get(i).getMaterial());
-            instrumento.setFamilia(instrumentos.get(i).getFamilia());
+    public void test01CreateInstrumentos() {
+        for(int i = 0; i < instrumentosDummie.size(); i ++ ) {
+            Instrumento instrumento = new Instrumento(instrumentosDummie.get(i).getId());
+            instrumento.setNombre(instrumentosDummie.get(i).getNombre());
+            instrumento.setMaterial(instrumentosDummie.get(i).getMaterial());
+            instrumento.setFamilia(instrumentosDummie.get(i).getFamilia());
 
             HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS)
                     .body(new InstrumentoDTO(instrumento)).post();
@@ -56,15 +57,14 @@ public class InstrumentoIT {
 
     @Test
     public void test03GetInstrumentoById() {
-        for(int i = 0; i < instrumentos.size(); i ++ ) {
+        for(int i = 0; i < instrumentosDummie.size(); i ++ ) {
             HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
-                    .param("id", instrumentos.get(i).getId()).get();
+                    .param("id", instrumentosDummie.get(i).getId()).get();
             HttpResponse response = new Client().submit(request);
             Instrumento created = (Instrumento) response.getBody();
 
             assertEquals(response.getStatus(), HttpStatus.OK);
-            assertEquals(instrumentos.get(i).getId(), created.getId());
-            assertEquals(instrumentos.get(i).getNombre(), created.getNombre());
+            assertEquals(instrumentosDummie.get(i).getId(), created.getId());
         }
     }
 
@@ -76,4 +76,30 @@ public class InstrumentoIT {
         assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus());
 
     }
+
+    @Test
+    public void test05PutInstrumento() {
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
+                .expandPath(instrumentosDummie.get(1).getId()).body(new InstrumentoDTO(new Instrumento("2"))).put();
+        HttpResponse response = new Client().submit(request);
+        assertEquals(response.getStatus(), HttpStatus.OK);
+        assertEquals(response.getBody(), "2");
+    }
+
+    @Test
+    public void test06DeleteById() {
+        this.test01CreateInstrumentos();
+        int count = this.findAll().size();
+        HttpRequest request2 = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).path(InstrumentoRestController.INSTRUMENTO_ID)
+                .expandPath(instrumentosDummie.get(0).getId()).delete();
+        new Client().submit(request2);
+        int count2 = this.findAll().size();
+        assertTrue(count2 < count);
+    }
+
+    private List<InstrumentoDTO> findAll() {
+        HttpRequest request = HttpRequest.builder(InstrumentoRestController.INSTRUMENTOS).get();
+        return (List<InstrumentoDTO>) new Client().submit(request).getBody();
+    }
+
 }
